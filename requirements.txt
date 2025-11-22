@@ -1,0 +1,16 @@
+# Core dependencies for MetaMindIQTrain
+pygame-ce>=2.5.3  # Community edition of pygame with pre-built wheels
+numpy>=2.2.4     # For mathematical operations
+pillow>=11.1.0   # For image processing
+python-socketio>=5.10.0  # For client-server communication
+
+# Optional dependencies for development and testing
+pytest>=8.3.5     # For running tests
+pytest-cov>=6.0.0  # For test coverage reports
+coverage>=7.7.0    # Required by pytest-cov
+iniconfig>=2.0.0   # Required by pytest
+packaging>=24.2    # Required by pytest
+pluggy>=1.5.0      # Required by pytest
+
+# No additional dependencies needed for the server
+# (uses only Python's standard library) 
