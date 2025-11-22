@@ -131,6 +131,26 @@ class ExpandVision(TrainingModule):
         self.controller.reset()
         self.last_update_time = time.time()
 
+    def render(self, renderer):
+        """Render the module using the provided renderer.
+
+        This method renders the module's UI using the renderer abstraction,
+        delegating to the view for the actual drawing.
+
+        Args:
+            renderer: The renderer instance to use for drawing.
+        """
+        # Update view dimensions
+        if hasattr(self.view, 'update_dimensions'):
+            self.view.update_dimensions(self.model.screen_width, self.model.screen_height)
+
+        # Render using the view
+        if hasattr(self.view, 'render_to_renderer'):
+            self.view.render_to_renderer(renderer, self.model)
+        else:
+            # Fallback - use base class render
+            super().render(renderer)
+
 
 if __name__ == "__main__":
     # For standalone testing (simulated environment)
