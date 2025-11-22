@@ -13,10 +13,40 @@ import time
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple, Union, Callable
 
-# Import core components
-from MetaMindIQTrain.core.component_system import Component, UIComponent
-from MetaMindIQTrain.core.renderer import get_renderer
-from MetaMindIQTrain.core.module_manager import get_module_registry, TrainingModule
+# Ensure project root is in path
+_project_root = Path(__file__).resolve().parent.parent
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
+# Import core components - try multiple approaches for robustness
+try:
+    from core.component_system import Component, UIComponent
+except ImportError:
+    try:
+        from MetaMindIQTrain.core.component_system import Component, UIComponent
+    except ImportError:
+        # Minimal fallback
+        class Component: pass
+        class UIComponent: pass
+
+try:
+    from core.renderer import get_renderer
+except ImportError:
+    try:
+        from MetaMindIQTrain.core.renderer import get_renderer
+    except ImportError:
+        def get_renderer(): return None
+
+try:
+    from core.module_manager import get_module_registry
+    from core.training_module import TrainingModule
+except ImportError:
+    try:
+        from MetaMindIQTrain.core.module_manager import get_module_registry
+        from MetaMindIQTrain.core.training_module import TrainingModule
+    except ImportError:
+        def get_module_registry(): return {}
+        class TrainingModule: pass
 
 logger = logging.getLogger(__name__)
 

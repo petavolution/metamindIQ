@@ -72,8 +72,11 @@ def main():
     logger.info("Starting MetaMindIQTrain")
     
     try:
-        # Import the application
-        from MetaMindIQTrain.core.app import get_application
+        # Import the application - try multiple approaches for robustness
+        try:
+            from core.app import get_application
+        except ImportError:
+            from MetaMindIQTrain.core.app import get_application
         
         # Get the application instance
         app = get_application()
