@@ -45,26 +45,35 @@ from modules.evolve.expand_vision.expand_vision_controller import ExpandVisionCo
 
 class ExpandVision(TrainingModule):
     """ExpandVision Training Module - Enhances peripheral vision and numerical processing.
-    
+
     This class serves as the main entry point for the ExpandVision training module.
-    It initializes the MVC components, handles the game loop, and provides 
+    It initializes the MVC components, handles the game loop, and provides
     the interface for interaction with the rest of the platform.
     """
-    
-    def __init__(self, screen_width: int, screen_height: int):
+
+    def __init__(self, difficulty=1):
         """Initialize the ExpandVision training module.
-        
+
         Args:
-            screen_width: Width of the screen in pixels
-            screen_height: Height of the screen in pixels
+            difficulty: Initial difficulty level
         """
         super().__init__()
-        
+
+        # Module metadata
+        self.name = "expand_vision"
+        self.display_name = "Expand Vision"
+        self.description = "Peripheral vision training to enhance visual field awareness"
+        self.category = "Visual Attention"
+
+        # Screen dimensions from parent class
+        self.screen_width = self.__class__.SCREEN_WIDTH
+        self.screen_height = self.__class__.SCREEN_HEIGHT
+
         # Initialize MVC components
-        self.model = ExpandVisionModel(screen_width, screen_height)
+        self.model = ExpandVisionModel(self.screen_width, self.screen_height)
         self.view = ExpandVisionView(self.model)
         self.controller = ExpandVisionController(self.model, self.view)
-        
+
         # Game timer
         self.last_update_time = time.time()
     

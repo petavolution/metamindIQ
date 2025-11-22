@@ -373,20 +373,30 @@ class Application:
     def _process_events(self):
         """Process events from the renderer."""
         events = self.renderer.process_events()
-        
+
         for event in events:
             event_type = event.get('type')
-            
+
             # Dispatch to handlers
             if event_type in self.event_handlers:
                 for handler in self.event_handlers[event_type]:
                     handler(event)
-                    
+
             # Handle module events
-            if self.active_module_id and event_type in ['mouse_down', 'mouse_up', 'key_down', 'key_up']:
+            if self.active_module_id:
                 module = self.module_registry.loaded_modules.get(self.active_module_id)
                 if module:
-                    module.trigger_event(event_type, event)
+                    # Handle mouse click events - prefer handle_click over trigger_event
+                    if event_type == 'mouse_down':
+                        pos = event.get('pos', (0, 0))
+                        if hasattr(module, 'handle_click') and callable(module.handle_click):
+                            module.handle_click(pos)
+                        elif hasattr(module, 'trigger_event') and callable(module.trigger_event):
+                            module.trigger_event(event_type, event)
+                    elif event_type in ['mouse_up', 'key_down', 'key_up']:
+                        # Other events still use trigger_event if available
+                        if hasattr(module, 'trigger_event') and callable(module.trigger_event):
+                            module.trigger_event(event_type, event)
                     
     def _render(self):
         """Render the current frame."""
